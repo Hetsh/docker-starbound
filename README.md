@@ -1,3 +1,5 @@
+**This Project is still work in progress.**
+
 # Starbound
 Simple to set up starbound server.
 
