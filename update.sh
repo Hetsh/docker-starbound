@@ -20,13 +20,13 @@ assert_dependency "curl"
 update_image "hetsh/steamcmd" "SteamCMD" "false" "(\d+\.)+\d+-\d+"
 
 # Starbound
-RS_PKG="MANIFEST_ID" # Steam depot id for identification
-RS_REGEX="\d+"
-CURRENT_RS_VERSION=$(cat Dockerfile | grep -P -o "$RS_PKG=\K$RS_REGEX")
-NEW_RS_VERSION=$(curl --silent --location "https://steamdb.info/depot/600762/" | grep -P -o "<td>\K$RS_REGEX" | tail -n 1)
-if [ "$CURRENT_RS_VERSION" != "$NEW_RS_VERSION" ]; then
-	prepare_update "$RS_PKG" "Starbound" "$CURRENT_RS_VERSION" "$NEW_RS_VERSION"
-	update_version "$NEW_RS_VERSION"
+MAN_ID="MANIFEST_ID" # Steam depot id for identification
+MAN_REGEX="\d{17,19}"
+CURRENT_SB_VERSION=$(cat Dockerfile | grep -P -o "$MAN_ID=\K$MAN_REGEX")
+NEW_SB_VERSION=$(curl --silent --location "https://steamdb.info/depot/533833/" | grep -P -o "<td>\K$MAN_REGEX" | tail -n 1)
+if [ "$CURRENT_SB_VERSION" != "$NEW_SB_VERSION" ]; then
+	prepare_update "$MAN_ID" "Starbound" "$CURRENT_SB_VERSION" "$NEW_SB_VERSION"
+	update_version "$NEW_SB_VERSION"
 fi
 
 if ! updates_available; then
