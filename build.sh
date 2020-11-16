@@ -27,16 +27,6 @@ docker build --tag "$IMG_NAME:latest" --tag "$IMG_NAME:$_NEXT_VERSION" .
 case "${1-}" in
 	# Test with default configuration
 	"--test")
-		# Set up temporary directory
-		TMP_DIR=$(mktemp -d "/tmp/$APP_NAME-XXXXXXXXXX")
-		add_cleanup "rm -rf $TMP_DIR"
-
-		# Apply permissions, UID matches process user
-		extract_var APP_UID "Dockerfile" "\K\d+"
-		chown -R "$APP_UID":"$APP_UID" "$TMP_DIR"
-
-		# Start the test
-		extract_var DATA_DIR "Dockerfile" "\"\K[^\"]+"
 		docker run \
 		--rm \
 		--tty \
@@ -44,7 +34,6 @@ case "${1-}" in
 		--publish 27500:27500/udp \
 		--publish 27500:27500/tcp \
 		--publish 27015:27015/udp \
-		--mount type=bind,source="$TMP_DIR",target="$DATA_DIR" \
 		--mount type=bind,source=/etc/localtime,target=/etc/localtime,readonly \
 		--name "$APP_NAME" \
 		"$IMG_NAME"
