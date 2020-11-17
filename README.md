@@ -1,11 +1,16 @@
-**This Project is still work in progress.**
-
 # Starbound
 Simple to set up starbound server.
 
+## Building the image
+Since it is not possible to download the dedicated server without a copy of the game purchased on steam, this image can't be built automatically by docker hub without leaking credentials. You have to build the image yourself, but can use the included build script:
+```bash
+git clone --recurse-submodules https://github.com/Hetsh/docker-starbound.git
+docker-starbound/build.sh
+```
+
 ## Running the server
 ```bash
-docker run --detach --name starbound --publish 27500:27500/udp --publish 27015:27015/udp hetsh/starbound
+docker run --detach --name starbound --publish 21025:21025/tcp hetsh/starbound
 ```
 
 ## Stopping the container
@@ -14,20 +19,15 @@ docker stop starbound
 ```
 
 ## Updates
-This image contains a specific version of the game and will not update on startup, this decreases starting time and disk space usage. Version number is the manifest id that can also be found on [SteamDB](https://steamdb.info/depot/600762/). This id and therefore the image on docker hub is updated hourly.
-
-## Configuring Maps
-Maps (worlds) are configured via environment variables `WORLD_TYPE` and `WORLD_NAME` with default values `Moon` and `Base`.
-To create a new world use additional parameters (Mars only example) `--env WORLD_TYPE=Mars --env WORLD_NAME=MarsBase` when launching the container.
-If `WORLD_NAME` already exists, the save is loaded instead and `WORLD_TYPE` is ignored.
+This image contains a specific version of the game and will not update on startup, this decreases starting time and disk space usage. Version number is the manifest id that can also be found on [SteamDB](https://steamdb.info/depot/533833). This id is updated hourly.
 
 ## Creating persistent storage
 ```bash
 MP="/path/to/storage"
 mkdir -p "$MP"
-chown -R 1358:1358 "$MP"
+chown -R 1370:1370 "$MP"
 ```
-`1358` is the numerical id of the user running the server (see Dockerfile).
+`1370` is the numerical id of the user running the server (see Dockerfile).
 Start the server with the additional mount flag:
 ```bash
 docker run --mount type=bind,source=/path/to/storage,target=/starbound ...
@@ -36,10 +36,10 @@ docker run --mount type=bind,source=/path/to/storage,target=/starbound ...
 ## Automate startup and shutdown via systemd
 The systemd unit can be found in my GitHub [repository](https://github.com/Hetsh/docker-starbound).
 ```bash
-systemctl enable starbound@<world> --now
+systemctl enable starbound@<port> --now
 ```
-Individual server instances are distinguished by world.
-By default, the systemd service assumes `/apps/starbound/<world>` for persistent storage and `/etc/localtime` for timezone.
+Individual server instances are distinguished by host-port.
+By default, the systemd service assumes `/apps/starbound/<port>` for persistent storage and `/etc/localtime` for timezone.
 Since this is a personal systemd unit file, you might need to adjust some parameters to suit your setup.
 
 ## Fork Me!
