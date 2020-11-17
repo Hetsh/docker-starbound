@@ -19,15 +19,9 @@ assert_dependency "curl"
 # Debian Stable with SteamCMD
 update_image "hetsh/steamcmd" "SteamCMD" "false" "(\d+\.)+\d+-\d+"
 
-# Starbound
-MAN_ID="MANIFEST_ID" # Steam depot id for identification
-MAN_REGEX="\d{17,19}"
-CURRENT_SB_VERSION=$(cat Dockerfile | grep -P -o "$MAN_ID=\K$MAN_REGEX")
-NEW_SB_VERSION=$(curl --silent --location "https://steamdb.info/depot/533833/" | grep -P -o "<td>\K$MAN_REGEX" | tail -n 1)
-if [ "$CURRENT_SB_VERSION" != "$NEW_SB_VERSION" ]; then
-	prepare_update "$MAN_ID" "Starbound" "$CURRENT_SB_VERSION" "$NEW_SB_VERSION"
-	update_version "$NEW_SB_VERSION"
-fi
+# Starbound & Assets
+update_depot "533833" "SRV_MANIFEST_ID" "Starbound Server" "true"
+update_depot "533831" "ASSET_MANIFEST_ID" "Starbound Assets" "false"
 
 if ! updates_available; then
 	#echo "No updates available."
