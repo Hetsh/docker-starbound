@@ -31,9 +31,7 @@ case "${1-}" in
 		--rm \
 		--tty \
 		--interactive \
-		--publish 27500:27500/udp \
-		--publish 27500:27500/tcp \
-		--publish 27015:27015/udp \
+		--publish 21025:21025/tcp \
 		--mount type=bind,source=/etc/localtime,target=/etc/localtime,readonly \
 		--name "$APP_NAME" \
 		"$IMG_NAME"
