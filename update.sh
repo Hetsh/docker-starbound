@@ -17,7 +17,7 @@ assert_dependency "jq"
 assert_dependency "curl"
 
 # Debian Stable with SteamCMD
-update_image "hetsh/steamcmd" "SteamCMD" "false" "(\d+\.)+\d+-\d+"
+update_image "hetsh/steamcmd" "SteamCMD" "false" "\d+-\d+"
 
 # Starbound & Assets
 update_depot "533833" "SRV_MANIFEST_ID" "Starbound Server" "true"
