@@ -22,7 +22,15 @@ RUN steamcmd.sh \
         +quit && \
     mv "$APP_DIR/depot_$ASSET_DEPOT_ID/assets" "$APP_DIR/depot_$SRV_DEPOT_ID" && \
     chown -R "$APP_USER":"$APP_USER" "$STEAM_DIR" && \
-    rm -r "$APP_DIR/depot_$ASSET_DEPOT_ID" /tmp/dumps /root/.steam /root/Steam
+    rm -r \
+        "$STEAM_DIR"/package/steamcmd_bins_linux.zip* \
+        "$STEAM_DIR"/package/steamcmd_linux.zip* \
+        "$STEAM_DIR"/package/steamcmd_public_all.zip* \
+        "$STEAM_DIR"/package/steamcmd_siteserverui_linux.zip* \
+        "$APP_DIR/depot_$ASSET_DEPOT_ID" \
+        /tmp/dumps \
+        /root/.steam \
+        /root/Steam
 
 # Volume
 ARG DATA_DIR="/starbound"
