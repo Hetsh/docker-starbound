@@ -1,4 +1,4 @@
-FROM hetsh/steamcmd:20210311-1
+FROM hetsh/steamcmd:20210511-1
 
 # App user
 ARG APP_USER="starbound"
