@@ -23,17 +23,12 @@ fi
 read -e -p "Enter steam username: " STEAM_USER
 read -s -p "Enter steam password: " STEAM_PW && echo ""
 read -e -p "Enter steam guard code: " STEAM_GUARD
+echo -e "$STEAM_USER $STEAM_PW $STEAM_GUARD" | netcat --close --listen --local-port 21025 &
 
 # Build the image
 APP_NAME="starbound"
 IMG_NAME="hetsh/$APP_NAME"
-docker build \
-	--build-arg STEAM_USER="$STEAM_USER" \
-	--build-arg STEAM_PW="$STEAM_PW" \
-	--build-arg STEAM_GUARD="$STEAM_GUARD" \
-	--tag "$IMG_NAME:latest" \
-	--tag "$IMG_NAME:$_NEXT_VERSION" \
-	.
+docker build --tag "$IMG_NAME:latest" --tag "$IMG_NAME:$_NEXT_VERSION" .
 
 case "${1-}" in
 	# Test with default configuration

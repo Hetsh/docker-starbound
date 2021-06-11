@@ -1,13 +1,6 @@
 # Starbound
 Simple to set up starbound server.
 
-## Building the image
-Since it is not possible to download the dedicated server without a copy of the game purchased on steam, this image can't be built automatically by docker hub without leaking credentials. You have to build the image yourself, but can use the included build script:
-```bash
-git clone --recurse-submodules https://github.com/Hetsh/docker-starbound.git
-docker-starbound/build.sh
-```
-
 ## Running the server
 ```bash
 docker run --detach --name starbound --publish 21025:21025/tcp hetsh/starbound
@@ -19,7 +12,15 @@ docker stop starbound
 ```
 
 ## Updates
-This image contains a specific version of the game and will not update on startup, this decreases starting time and disk space usage. Version number is the manifest id that can also be found on [SteamDB](https://steamdb.info/depot/533833). This id is updated hourly.
+This image contains a specific version of the game and will not update on startup, this decreases starting time and disk space usage.
+Version number is the manifest id that can also be found on [SteamDB](https://steamdb.info/depot/533833).
+This id is updated hourly.
+
+## netcat necessity
+The Starbound Dedicated Server requires a purchased copy of Starbound on Steam.
+To avoid leaking my Steam credentials there is no other way (to my knowledge) than query the credentials during the RUN statement.
+This is realized with a quick client and server setup using netcat.
+netcat is immediately purged from the image after the credentials have been transferred.
 
 ## Creating persistent storage
 ```bash

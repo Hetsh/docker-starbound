@@ -12,11 +12,13 @@ ARG SRV_MANIFEST_ID=4004503843917843549
 ARG ASSET_DEPOT_ID=533831
 ARG ASSET_MANIFEST_ID=2755498507246012069
 ARG APP_DIR="$STEAM_DIR/linux32/steamapps/content/app_$APP_ID"
-ARG STEAM_USER="anonymous"
-ARG STEAM_PW
-ARG STEAM_GUARD
-RUN steamcmd.sh \
-        +login "$STEAM_USER" "$STEAM_PW" "$STEAM_GUARD" \
+RUN apt-get update && \
+    apt-get install --assume-yes netcat-traditional && \
+    STEAM_AUTH=$(netcat 172.17.0.1 21025) && \
+    apt-get purge --assume-yes netcat-traditional && \
+    rm -r /var/lib/apt/lists /var/cache/apt && \
+    steamcmd.sh \
+        +login $STEAM_AUTH \
         +download_depot "$APP_ID" "$SRV_DEPOT_ID" "$SRV_MANIFEST_ID" \
         +download_depot "$APP_ID" "$ASSET_DEPOT_ID" "$ASSET_MANIFEST_ID" \
         +quit && \
