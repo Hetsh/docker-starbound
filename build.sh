@@ -13,6 +13,7 @@ source libs/common.sh
 source libs/docker.sh
 
 # Check access to docker daemon
+assert_dependency "nc"
 assert_dependency "docker"
 if ! docker version &> /dev/null; then
 	echo "Docker daemon is not running or you have unsufficient permissions!"
