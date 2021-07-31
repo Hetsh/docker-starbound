@@ -26,28 +26,36 @@ read -s -p "Enter steam password: " STEAM_PW && echo ""
 read -e -p "Enter steam guard code: " STEAM_GUARD
 echo -e "$STEAM_USER $STEAM_PW $STEAM_GUARD" | netcat --close --listen --local-port 21025 &
 
-# Build the image
-APP_NAME="starbound"
-IMG_NAME="hetsh/$APP_NAME"
-docker build --tag "$IMG_NAME:latest" --tag "$IMG_NAME:$_NEXT_VERSION" .
-
+IMG_NAME="hetsh/starbound"
 case "${1-}" in
-	# Test with default configuration
+	# Build and test with default configuration
 	"--test")
+		docker build \
+			--tag "$IMG_NAME:test" \
+			.
 		docker run \
-		--rm \
-		--tty \
-		--interactive \
+			--rm \
+			--tty \
+			--interactive \
 		--publish 21025:21025/tcp \
-		--mount type=bind,source=/etc/localtime,target=/etc/localtime,readonly \
-		--name "$APP_NAME" \
-		"$IMG_NAME"
+			--mount type=bind,source=/etc/localtime,target=/etc/localtime,readonly \
+			"$IMG_NAME:test"
 	;;
-	# Push image to docker hub
+	# Build if it does not exist and push image to docker hub
 	"--upload")
 		if ! tag_exists "$IMG_NAME"; then
+			docker build \
+				--tag "$IMG_NAME:latest" \
+				--tag "$IMG_NAME:$_NEXT_VERSION" \
+				.
 			docker push "$IMG_NAME:latest"
 			docker push "$IMG_NAME:$_NEXT_VERSION"
 		fi
+	;;
+	# Build image without additonal steps
+	*)
+		docker build \
+			--tag "$IMG_NAME:latest" \
+			.
 	;;
 esac
