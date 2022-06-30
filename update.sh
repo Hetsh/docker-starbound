@@ -20,8 +20,8 @@ assert_dependency "curl"
 update_image "hetsh/steamcmd" "SteamCMD" "false" "\d+-\d+"
 
 # Starbound & Assets
-update_depot "533833" "SRV_MANIFEST_ID" "Starbound Server" "true"
-update_depot "533831" "ASSET_MANIFEST_ID" "Starbound Assets" "false"
+update_depot "533830" "533833" "SRV_MANIFEST_ID" "Starbound Server" "true"
+update_depot "533830" "533831" "ASSET_MANIFEST_ID" "Starbound Assets" "false"
 
 if ! updates_available; then
 	#echo "No updates available."
