@@ -37,7 +37,7 @@ case "${1-}" in
 			--rm \
 			--tty \
 			--interactive \
-		--publish 21025:21025/tcp \
+			--publish 21025:21025/tcp \
 			--mount type=bind,source=/etc/localtime,target=/etc/localtime,readonly \
 			"$IMG_NAME:test"
 	;;
@@ -50,6 +50,9 @@ case "${1-}" in
 				.
 			docker push "$IMG_NAME:latest"
 			docker push "$IMG_NAME:$_NEXT_VERSION"
+			
+			# Remove version for easier image cleanup
+			docker image rm "$IMG_NAME:$_NEXT_VERSION"
 		fi
 	;;
 	# Build image without additonal steps
