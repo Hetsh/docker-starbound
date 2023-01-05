@@ -14,10 +14,13 @@ ARG ASSET_MANIFEST_ID=2755498507246012069
 ARG APP_DIR="$STEAM_DIR/linux32/steamapps/content/app_$APP_ID"
 RUN apt update && \
     apt install --assume-yes \
-        netcat-openbsd && \
-    STEAM_AUTH=$(netcat -d 172.17.0.1 21025) && \
+        netcat-openbsd \
+        iproute2 && \
+    GATEWAY=$(ip route show default | cut -d ' ' -f 3) && \
+    STEAM_AUTH=$(netcat -d $GATEWAY 21025) && \
     apt purge --assume-yes --auto-remove \
-        netcat-openbsd && \
+        netcat-openbsd \
+        iproute2 && \
     rm -r /var/lib/apt/lists /var/cache/apt && \
     steamcmd.sh \
         +login $STEAM_AUTH \
