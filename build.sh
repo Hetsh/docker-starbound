@@ -13,7 +13,7 @@ source libs/common.sh
 source libs/docker.sh
 
 # Check access to docker daemon
-assert_dependency "nc"
+assert_dependency "netcat"
 assert_dependency "docker"
 if ! docker version &> /dev/null; then
 	echo "Docker daemon is not running or you have unsufficient permissions!"
@@ -24,7 +24,7 @@ fi
 read -e -p "Enter steam username: " STEAM_USER
 read -s -p "Enter steam password: " STEAM_PW && echo ""
 read -e -p "Enter steam guard code: " STEAM_GUARD
-echo -e "$STEAM_USER $STEAM_PW $STEAM_GUARD" | netcat --close --listen --local-port 21025 &
+echo -e "$STEAM_USER $STEAM_PW $STEAM_GUARD" | netcat -N -l 21025 &
 
 IMG_NAME="hetsh/starbound"
 case "${1-}" in
